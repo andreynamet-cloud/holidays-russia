@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>История государственных праздников России | Интерактивная викторина</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1e2a3e;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        :root {
+            --white: #ffffff;
+            --blue: #0033a0;
+            --red: #da291c;
+            --dark-blue: #00225c;
+            --gray-bg: #f8f9fc;
+            --green: #2e7d32;
+        }
+        .btn {
+            display: inline-block;
+            background-color: var(--blue);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--blue);
+            color: var(--blue);
+        }
+        .btn-outline:hover {
+            background-color: var(--blue);
+            color: white;
+        }
+        .btn:hover {
+            background-color: var(--dark-blue);
+            transform: translateY(-2px);
+        }
+        .header {
+            background-color: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(8px);
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .logo {
+            font-weight: 800;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--blue), var(--red));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #1e2a3e;
+            font-weight: 500;
+        }
+        .hero {
+            background: linear-gradient(135deg, #f0f4ff 0%, #ffffff 100%);
+            padding: 80px 0;
+            text-align: center;
+            border-bottom: 4px solid var(--red);
+        }
+        .hero h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--blue), var(--red));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            color: #4a5568;
+            max-width: 700px;
+            margin: 0 auto 32px;
+        }
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 48px;
+            color: #1e2a3e;
+        }
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--blue), var(--red));
+            margin: 16px auto 0;
+            border-radius: 2px;
+        }
+        .quiz-container {
+            background: white;
+            border-radius: 32px;
+            padding: 32px;
+            box-shadow: 0 20px 35px -10px rgba(0,0,0,0.1);
+            margin: 40px 0;
+        }
+        .question-card {
+            background: var(--gray-bg);
+            border-radius: 24px;
+            padding: 28px;
+            margin-bottom: 24px;
+            transition: 0.2s;
+            border-left: 6px solid var(--blue);
+        }
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: white;
+            border-radius: 60px;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .option:hover {
+            background: #eef2ff;
+            border-color: var(--blue);
+        }
+        .option input {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        .option label {
+            flex: 1;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .feedback {
+            margin-top: 12px;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .feedback.correct {
+            background: #e8f5e9;
+            color: var(--green);
+            border-left: 4px solid var(--green);
+            display: block;
+        }
+        .feedback.wrong {
+            background: #ffebee;
+            color: var(--red);
+            border-left: 4px solid var(--red);
+            display: block;
+        }
+        .quiz-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid #e2e8f0;
+        }
+        .result-block {
+            text-align: center;
+            background: var(--blue);
+            color: white;
+            padding: 28px;
+            border-radius: 32px;
+            margin-top: 32px;
+        }
+        .result-block h3 {
+            font-size: 2rem;
+        }
+        .holidays-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        .holiday-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+            transition: 0.3s;
+            border: 1px solid #eef2f6;
+            cursor: pointer;
+        }
+        .holiday-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 30px -12px rgba(0,51,160,0.15);
+        }
+        .holiday-card h3 { font-size: 1.4rem; margin-bottom: 8px; }
+        .holiday-date { color: var(--red); font-weight: 600; margin-bottom: 12px; }
+        .footer {
+            background-color: #0f172a;
+            color: #cbd5e1;
+            padding: 48px 0 24px;
+            margin-top: 64px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            max-width: 500px;
+            width: 90%;
+            padding: 28px;
+            border-radius: 32px;
+            text-align: center;
+        }
+        .close-modal {
+            float: right;
+            font-size: 28px;
+            cursor: pointer;
+        }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .section-title { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="container">
+        <div class="nav">
+            <div class="logo">ПРАЗДНИКИ РОССИИ</div>
+            <div class="nav-links">
+                <a href="#about">О проекте</a>
+                <a href="#holidays">Праздники</a>
+                <a href="#quiz">Викторина</a>
+                <a href="#teachers">Педагогам</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="container">
+            <h1>История государственных праздников России</h1>
+            <p>Интерактивная викторина. Узнай, когда и почему появились День России, День народного единства, День Победы и другие праздники нашей страны.</p>
+            <div class="hero-buttons">
+                <a href="#quiz" class="btn">Начать викторину</a>
+                <a href="#about" class="btn btn-outline">О проекте</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="container" style="padding: 64px 0;">
+        <h2 class="section-title">О проекте</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px;">
+            <div>
+                <h3>📖 Цифровой образовательный ресурс</h3>
+                <p>Создан в рамках исследовательского проекта студентами педагогического университета. Цель — повысить уровень знаний об истории государственных праздников России, их значении и эволюции.</p>
+            </div>
+            <div>
+                <h3>🎯 15 вопросов · 10–15 минут</h3>
+                <p>Викторина охватывает 4 исторических периода: дореволюционные праздники, советские праздники, современные праздники России, символы и традиции. После каждого вопроса — мгновенная обратная связь.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="holidays" style="background: var(--gray-bg); padding: 64px 0;">
+        <div class="container">
+            <h2 class="section-title">Какие праздники мы изучаем?</h2>
+            <div class="holidays-grid" id="holidaysGrid"></div>
+        </div>
+    </section>
+
+    <section id="quiz" style="padding: 64px 0;">
+        <div class="container">
+            <h2 class="section-title">Проверь себя: викторина о праздниках</h2>
+            <div id="quizApp" class="quiz-container"></div>
+        </div>
+    </section>
+
+    <section id="teachers" style="background: var(--gray-bg); padding: 64px 0;">
+        <div class="container">
+            <h2 class="section-title">Используйте ресурс в работе</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 32px; text-align: center;">
+                <div><strong>🏛️ На уроках истории</strong><br>Как интерактивная разминка или контрольная работа</div>
+                <div><strong>🎓 На классных часах</strong><br>Готовый сценарий + викторина для патриотического воспитания</div>
+                <div><strong>🏆 Для олимпиад и викторин</strong><br>Банк вопросов по всем историческим периодам</div>
+                <div><strong>📱 Дистанционное обучение</strong><br>Викторина работает на любом устройстве</div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 32px;">
+            <div>
+                <h3 style="color: white;">Самарский государственный социально-педагогический университет</h3>
+                <p>Факультет иностранных языков<br>Проект «История государственных праздников России: цифровой ресурс для изучения»</p>
+            </div>
+            <div>
+                <p>Автор: Иванова Ольга<br>Самара 2026</p>
+                <p style="margin-top: 16px;">© Все материалы можно использовать в некоммерческих образовательных целях</p>
+            </div>
+        </div>
+        <hr style="margin: 32px 0 16px; border-color: #2d3a5e;">
+        <div style="text-align: center; font-size: 0.85rem;">Цифровой ресурс по дисциплине «Методы исследовательской и проектной деятельности»</div>
+    </div>
+</footer>
+
+<div id="holidayModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h3 id="modalTitle"></h3>
+        <p id="modalDate" style="color: var(--red); font-weight: 600;"></p>
+        <p id="modalDesc"></p>
+        <button class="btn" id="modalQuizBtn" style="margin-top: 16px;">Пройти викторину</button>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        { question: "Какой праздник был главным государственным праздником в Российской империи до 1917 года?", options: ["Новый год", "Рождество Христово", "День рождения императора"], correct: 2 },
+        { question: "Какой праздник в СССР отмечался 7 ноября?", options: ["День Конституции", "День Октябрьской революции", "День Красной армии"], correct: 1 },
+        { question: "В каком году День Победы стал нерабочим днём в СССР?", options: ["1945", "1965", "1975"], correct: 1 },
+        { question: "С каким историческим событием связан День народного единства 4 ноября?", options: ["Освобождение Москвы от поляков (1612)", "Основание Москвы", "Окончание ВОВ"], correct: 0 },
+        { question: "Когда был установлен праздник День России (12 июня)?", options: ["1990", "1992", "1994"], correct: 1 },
+        { question: "Какой праздник был возвращён в календарь нерабочих дней в 1991 году?", options: ["Пасха", "Рождество Христово", "День Святой Троицы"], correct: 1 },
+        { question: "Какой символ традиционно используется для празднования Дня Победы?", options: ["Георгиевская ленточка", "Берёзовая ветка", "Колокольчик"], correct: 0 },
+        { question: "Как назывался праздник 1 мая в СССР?", options: ["День солидарности трудящихся", "Международный женский день", "День урожая"], correct: 0 },
+        { question: "Что общего у праздников 23 февраля и 8 марта в СССР?", options: ["Оба были введены Лениным", "Оба связаны с борьбой за права", "Оба стали выходными в 1965"], correct: 1 },
+        { question: "Какой из этих праздников НЕ является государственным (нерабочим) в России?", options: ["23 февраля", "8 марта", "12 апреля (День космонавтики)"], correct: 2 },
+        { question: "В каком году 7 ноября перестал быть выходным днём в России?", options: ["2004", "2005", "2010"], correct: 1 },
+        { question: "Какой праздник установлен в память о событиях 1612 года?", options: ["День народного единства", "День России", "День Октябрьской революции"], correct: 0 },
+        { question: "Кто руководил народным ополчением в 1612 году?", options: ["Александр Невский", "Минин и Пожарский", "Кутузов"], correct: 1 },
+        { question: "Что произошло с церковными праздниками после установления советской власти?", options: ["Остались выходными", "Были отменены как государственные", "Их названия заменили"], correct: 1 },
+        { question: "Какой праздник появился в России в 2005 году, заменив 7 ноября?", options: ["День России", "День народного единства", "День защитника Отечества"], correct: 1 }
+    ];
+
+    let userAnswers = new Array(quizData.length).fill(null);
+    let quizSubmitted = false;
+
+    function renderQuiz() {
+        const container = document.getElementById('quizApp');
+        if (!container) return;
+        let html = '';
+        quizData.forEach((q, idx) => {
+            const selected = userAnswers[idx] !== null ? userAnswers[idx] : -1;
+            html += `
+                <div class="question-card" data-qidx="${idx}">
+                    <div class="question-text">${idx+1}. ${q.question}</div>
+                    <div class="options">
+                        ${q.options.map((opt, optIdx) => `
+                            <div class="option" data-q="${idx}" data-opt="${optIdx}">
+                                <input type="radio" name="q${idx}" value="${optIdx}" id="q${idx}_${optIdx}" ${selected === optIdx ? 'checked' : ''} ${quizSubmitted ? 'disabled' : ''}>
+                                <label for="q${idx}_${optIdx}">${String.fromCharCode(65+optIdx)}. ${opt}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="feedback" id="fb_${idx}"></div>
+                </div>
+            `;
+        });
+        html += `<div class="quiz-footer"><button id="submitQuizBtn" class="btn" ${quizSubmitted ? 'disabled' : ''}>✅ Завершить викторину</button><button id="resetQuizBtn" class="btn btn-outline">🔄 Пройти заново</button></div>`;
+        if (quizSubmitted) {
+            const score = userAnswers.filter((ans, idx) => ans === quizData[idx].correct).length;
+            let message = '';
+            if (score === quizData.length) message = 'Отлично! Вы настоящий знаток истории праздников!';
+            else if (score >= 12) message = 'Очень хороший результат! Совсем немного до идеала.';
+            else if (score >= 9) message = 'Хороший результат, но есть над чем поработать.';
+            else message = 'Рекомендуем повторить историю праздников. Викторина поможет закрепить материал.';
+            html += `<div class="result-block"><h3>Ваш результат: ${score} из ${quizData.length}</h3><p>${message}</p></div>`;
+        }
+        container.innerHTML = html;
+
+        document.querySelectorAll('.option').forEach(optDiv => {
+            optDiv.addEventListener('click', (e) => {
+                if (quizSubmitted) return;
+                const qIdx = parseInt(optDiv.dataset.q);
+                const optVal = parseInt(optDiv.dataset.opt);
+                const radio = optDiv.querySelector('input');
+                if (radio) radio.checked = true;
+                userAnswers[qIdx] = optVal;
+                showFeedback(qIdx);
+            });
+        });
+        if (!quizSubmitted) {
+            const submitBtn = document.getElementById('submitQuizBtn');
+            if (submitBtn) submitBtn.onclick = submitQuiz;
+        }
+        const resetBtn = document.getElementById('resetQuizBtn');
+        if (resetBtn) resetBtn.onclick = resetQuiz;
+        for (let i = 0; i < quizData.length; i++) {
+            if (userAnswers[i] !== null) showFeedback(i);
+        }
+    }
+
+    function showFeedback(qIdx) {
+        const fbDiv = document.getElementById(`fb_${qIdx}`);
+        if (!fbDiv) return;
+        const selected = userAnswers[qIdx];
+        if (selected === null) {
+            fbDiv.className = 'feedback';
+            fbDiv.innerHTML = '';
+            return;
+        }
+        const isCorrect = (selected === quizData[qIdx].correct);
+        const correctLetter = String.fromCharCode(65 + quizData[qIdx].correct);
+        const correctText = quizData[qIdx].options[quizData[qIdx].correct];
+        if (isCorrect) {
+            fbDiv.className = 'feedback correct';
+            fbDiv.innerHTML = `✅ Верно! ${correctText} — правильный ответ.`;
+        } else {
+            fbDiv.className = 'feedback wrong';
+            fbDiv.innerHTML = `❌ Неверно. Правильный ответ: ${correctLetter}. ${correctText}.`;
+        }
+    }
+
+    function submitQuiz() {
+        for (let i = 0; i < quizData.length; i++) {
+            if (userAnswers[i] === null) {
+                alert(`Ответьте на вопрос ${i+1} перед завершением.`);
+                return;
+            }
+        }
+        quizSubmitted = true;
+        renderQuiz();
+    }
+
+    function resetQuiz() {
+        userAnswers.fill(null);
+        quizSubmitted = false;
+        renderQuiz();
+    }
+
+    const holidaysData = [
+        { name: "Новый год", date: "1 января", desc: "Традиция отмечать 1 января появилась при Петре I в 1699 году. До этого новый год праздновали 1 сентября." },
+        { name: "Рождество Христово", date: "7 января", desc: "В 1991 году Рождество вернули в число государственных выходных. Главный религиозный праздник православной России." },
+        { name: "День защитника Отечества", date: "23 февраля", desc: "Учреждён в 1922 году как День Красной армии. Современное название — с 1995 года." },
+        { name: "Международный женский день", date: "8 марта", desc: "Возник как день солидарности женщин в борьбе за равноправие. В СССР — с 1921 года, выходной с 1965." },
+        { name: "Праздник Весны и Труда", date: "1 мая", desc: "День международной солидарности трудящихся. В РФ с 1992 года переименован в Праздник Весны и Труда." },
+        { name: "День Победы", date: "9 мая", desc: "Выходной день с 1965 года. Символы: георгиевская ленточка, Бессмертный полк." },
+        { name: "День России", date: "12 июня", desc: "Установлен в 1992 году в честь принятия Декларации о государственном суверенитете РСФСР (1990)." },
+        { name: "День народного единства", date: "4 ноября", desc: "Учреждён в 2005 году в память об освобождении Москвы от польских интервентов ополчением Минина и Пожарского в 1612 году." }
+    ];
+
+    const grid = document.getElementById('holidaysGrid');
+    if (grid) {
+        holidaysData.forEach(h => {
+            const card = document.createElement('div');
+            card.className = 'holiday-card';
+            card.innerHTML = `<h3>${h.name}</h3><div class="holiday-date">${h.date}</div><div class="holiday-desc">${h.desc.substring(0, 100)}${h.desc.length > 100 ? '…' : ''}</div>`;
+            card.addEventListener('click', () => {
+                document.getElementById('modalTitle').innerText = h.name;
+                document.getElementById('modalDate').innerText = h.date;
+                document.getElementById('modalDesc').innerText = h.desc;
+                document.getElementById('holidayModal').style.display = 'flex';
+            });
+            grid.appendChild(card);
+        });
+    }
+
+    const modal = document.getElementById('holidayModal');
+    const closeModal = document.querySelector('.close-modal');
+    if (closeModal) closeModal.onclick = () => modal.style.display = 'none';
+    window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+    const modalQuizBtn = document.getElementById('modalQuizBtn');
+    if (modalQuizBtn) modalQuizBtn.onclick = () => { modal.style.display = 'none'; document.getElementById('quiz').scrollIntoView({ behavior: 'smooth' }); };
+
+    renderQuiz();
+</script>
+</body>
+</html>
